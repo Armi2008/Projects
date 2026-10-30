@@ -1,0 +1,15 @@
+/workspaces/Projects/TikTakToe/bin/Debug/net10.0/TikTakToe
+/workspaces/Projects/TikTakToe/bin/Debug/net10.0/TikTakToe.deps.json
+/workspaces/Projects/TikTakToe/bin/Debug/net10.0/TikTakToe.runtimeconfig.json
+/workspaces/Projects/TikTakToe/bin/Debug/net10.0/TikTakToe.dll
+/workspaces/Projects/TikTakToe/bin/Debug/net10.0/TikTakToe.pdb
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.AssemblyInfoInputs.cache
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.AssemblyInfo.cs
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.csproj.CoreCompileInputs.cache
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.sourcelink.json
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.dll
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/refint/TikTakToe.dll
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.pdb
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/TikTakToe.genruntimeconfig.cache
+/workspaces/Projects/TikTakToe/obj/Debug/net10.0/ref/TikTakToe.dll
