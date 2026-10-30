@@ -213,32 +213,59 @@ public class Playground
         CreateTraderStand(15, "⚔️");
         CreateTraderStand(35, "🛡️");
         CreateTraderStand(55, "❤️");
-        CreateTraderStand(75, "🔱");
+        CreateTraderStand(75, "");
 
         traderRoomInitialized = true;
     }
 
-    public void BuyItem(Player player, char item)
+
+    public void BuyItem(Player player, string item)
     {
         int cost = 0;
 
         switch (item)
         {
-            case 'A': cost = 50; break;
-            case 'S': cost = 75; break;
-            case 'L': cost = 100; break;
-            case 'T': cost = 150; break;
+            case "⚔️": cost = 50; break;
+            case "🛡️": cost = 75; break;
+            case "❤️": cost = 100; break;
+            case "💎": cost = 150; break;
         }
 
         while (true)
         {
             Console.Clear();
 
-            Console.WriteLine($"Dein Item: {item}");
-            Console.WriteLine("Druecke B zum Kaufen.");
-            Console.WriteLine("Druecke C zum Abbrechen.");
-            Console.WriteLine($"Dein Gold: {player.Gold}");
-            Console.WriteLine($"Kosten: {cost}");
+            string[] text =
+            {
+            "==============================",
+            "",
+            "          TRADER SHOP",
+            "",
+            $"        Your Item: {item}",
+            $"        Your Gold: {player.Gold}",
+            $"        Cost: {cost}",
+            "",
+            "      Press B to buy.",
+            "      Press C to cancel.",
+            "",
+            "=============================="
+        };
+
+            int startY = (Console.WindowHeight - text.Length) / 2;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                int startX = (Console.WindowWidth - text[i].Length) / 2;
+
+                if (startX < 0)
+                    startX = 0;
+
+                if (startY + i >= 0 && startY + i < Console.BufferHeight)
+                {
+                    Console.SetCursorPosition(startX, startY + i);
+                    Console.Write(text[i]);
+                }
+            }
 
             ConsoleKey key = Console.ReadKey(true).Key;
 
@@ -255,30 +282,48 @@ public class Playground
 
                     switch (item)
                     {
-                        case 'A':
+                        case "⚔️":
                             player.attack += 10;
                             break;
 
-                        case 'S':
+                        case "🛡️":
                             player.shield += 10;
                             break;
 
-                        case 'L':
+                        case "❤️":
                             player.healthPoints += 10;
                             break;
 
-                        case 'T':
-                            // Totem skibidi
+                        case "💎":
+                            player.attack += 50;
+                            player.shield += 50;
+                            player.healthPoints += 50;
                             break;
                     }
 
-                    Console.WriteLine("Gekauft!");
+                    Console.Clear();
+
+                    string message = "Purchased! \n\n\n Press any key to return.";
+                    int messageX = (Console.WindowWidth - message.Length) / 2;
+                    int messageY = Console.WindowHeight / 2;
+
+                    Console.SetCursorPosition(messageX, messageY);
+                    Console.Write(message);
+
                     Console.ReadKey(true);
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Nicht genug Gold!");
+                    Console.Clear();
+
+                    string message = "Not enough gold!";
+                    int messageX = (Console.WindowWidth - message.Length) / 2;
+                    int messageY = Console.WindowHeight / 2;
+
+                    Console.SetCursorPosition(messageX, messageY);
+                    Console.Write(message);
+
                     Console.ReadKey(true);
                 }
             }
@@ -346,7 +391,7 @@ public class Playground
         int infoY = startY + mapHeight + 1;
 
         string info =
-            $"Health: {player.healthPoints} | Attack: {player.attack} | Shield: {player.shield} | Gold: {player.Gold}";
+            $"Health (❤️): {player.healthPoints} | Attack (⚔️): {player.attack} | Shield (🛡️): {player.shield} | Gold (💰): {player.Gold}";
 
         int infoX = (Console.WindowWidth - info.Length) / 2;
 

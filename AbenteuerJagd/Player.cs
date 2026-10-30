@@ -2,12 +2,13 @@
 {
     public int playerX = 40;
     public int playerY = 12;
-    public int healthPoints = 1000;
+    public int healthPoints = 10;
 
-    public int attack = 100;
-    public int shield = 0;
+    public int attack = 2;
+    public int shield = 5;
 
-    public int Gold = 0;
+    public int Gold = 10;
+    public int Diamond = 0;
 
     public bool IsAlive = true;
     public string Pl = "🧙";

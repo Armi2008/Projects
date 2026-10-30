@@ -7,6 +7,7 @@ class Program
 {
     static CancellationTokenSource roomCancellation;
     static List<SpawnItems> items = new List<SpawnItems>();
+    static List<Mobs> mobs = new List<Mobs>();
 
     public static void ShowIntro()
     {
@@ -70,25 +71,24 @@ class Program
                 case ConsoleKey.D:
                     player.moveRight(map);
                     break;
-
-                case ConsoleKey.Escape:
-                    ReturnToStartMap(player, playground);
-                    break;
             }
+
             foreach (SpawnItems item in items)
             {
                 item.CollectItem(player, map);
             }
+
             Thread.Sleep(40);
         }
 
         return true;
     }
 
+
     public static List<Mobs> CreateLevels(
         int level, int room, Playground playground)
     {
-        List<Mobs> mobs = new List<Mobs>();
+        mobs.Clear();
         items.Clear();
 
         if (level == 1)
@@ -207,7 +207,7 @@ class Program
                 for (int i = 0; i < 4; i++)
                     mobs.Add(new Mobs("💀", 5, 1, 5 + i * 15, 5, true, false, playground, 3));
 
-                items.Add(new SpawnItems("❤️", 0, 0, 75, 10, 25, playground));
+                items.Add(new SpawnItems("❤️", 0, 0, 75, 10, 20, playground));
                 items.Add(new SpawnItems("⚔️", 30, 0, 0, 30, 20, playground));
                 items.Add(new SpawnItems("🛡️", 0, 30, 0, 55, 20, playground));
             }
@@ -225,7 +225,8 @@ class Program
                 mobs.Add(new Mobs("🧟", 8, 2, 30, 12, true, false, playground, 5));
                 mobs.Add(new Mobs("🗿", 20, 3, 20, 8, true, false, playground, 10));
                 mobs.Add(new Mobs("👹", 30, 5, 25, 15, true, false, playground, 20));
-                mobs.Add(new Mobs("🐉", 100, 12, 35, 15, true, false, playground, 25));
+                Mobs enderdragon = new Mobs("🐉", 100, 12, 35, 15, true, false, playground, 25);
+                mobs.Add(enderdragon);
 
                 items.Add(new SpawnItems("❤️", 0, 0, 75, 10, 25, playground));
                 items.Add(new SpawnItems("⚔️", 35, 0, 0, 25, 20, playground));
@@ -240,9 +241,9 @@ class Program
     public static void StartMobsInRoom(
         int level, int room, string[,] map, Player player, Playground playground)
     {
-        List<Mobs> mobs = CreateLevels(level, room, playground);
+        CreateLevels(level, room, playground);
         roomCancellation = new CancellationTokenSource();
-
+        
         foreach (Mobs mob in mobs)
         {
             map[mob.Y, mob.X] = mob.Name;
@@ -252,6 +253,74 @@ class Program
         foreach (SpawnItems item in items)
         {
             map[item.Y, item.X] = item.Name;
+        }
+    }
+
+
+
+
+    public static void GameWon()
+    {
+        Mobs.GameWonStarted = true;
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Yellow;
+
+        string[] gameWonText =
+        {
+        "Y   Y  OOO  U   U   W   W  OOO  N   N",
+        " Y Y  O   O U   U   W   W O   O NN  N",
+        "  Y   O   O U   U   W W W O   O N N N",
+        "  Y   O   O U   U   WW WW O   O N  NN",
+        "  Y    OOO   UUU    W   W  OOO  N   N",
+        "",
+        "       🐉 ENDER DRAGON DEFEATED 🐉",
+        "",
+        "       You conquered the Dungeon!",
+        "",
+        "       Press any key to exit..."
+    };
+
+        int startY = Math.Max(0, (Console.WindowHeight - gameWonText.Length) / 2);
+
+        for (int i = 0; i < gameWonText.Length; i++)
+        {
+            string line = gameWonText[i];
+
+            int x = Math.Max(0, (Console.WindowWidth - line.Length) / 2);
+            int y = startY + i;
+
+            if (y < Console.WindowHeight)
+            {
+                Console.SetCursorPosition(x, y);
+                Console.WriteLine(line);
+
+                Thread.Sleep(150);
+            }
+        }
+
+        Console.ResetColor();
+        Console.ReadKey(true);
+
+        Environment.Exit(0);
+    }
+
+
+
+    public static void CheckGameWon(Playground playground)
+    {
+        foreach (Mobs mob in mobs)
+        {
+            if (mob.Name == "🐉" && mob.IsDefeated)
+            {
+                Mobs.GameWonStarted = true;
+                playground.startMapIsActive = false;
+                playground.secondRoomIsActive = false;
+                playground.thirdRoomIsActive = false;
+                playground.recoveryRoomIsActive = false;
+                playground.traderRoomIsActive = false;
+                GameWon();
+                return;
+            }
         }
     }
 
@@ -266,7 +335,7 @@ class Program
         Console.Clear();
 
         playground.secondRoomIsActive = true;
-        player.playerX = 30;
+        player.playerX = 32;
         player.playerY = 1;
 
         if (!playground.secondRoomMobsCreated)
@@ -308,7 +377,7 @@ class Program
         Console.Clear();
 
         playground.thirdRoomIsActive = true;
-        player.playerX = 30;
+        player.playerX = 35;
         player.playerY = 1;
 
         if (!playground.thirdRoomMobsCreated)
@@ -334,6 +403,7 @@ class Program
         Console.Clear();
 
         playground.startMapIsActive = true;
+
         player.playerX = playground.backToStartX;
         player.playerY = playground.backToStartY;
 
@@ -351,6 +421,7 @@ class Program
         Console.Clear();
 
         playground.secondRoomIsActive = true;
+
         player.playerX = 1;
         player.playerY = 22;
     }
@@ -364,8 +435,9 @@ class Program
         Console.Clear();
 
         playground.recoveryRoomIsActive = true;
-        player.playerX = 45;
-        player.playerY = 1;
+
+        player.playerX = 1;
+        player.playerY = 17;
     }
 
     public static void EnterTraderRoom(Player player, Playground playground)
@@ -384,30 +456,35 @@ class Program
         {
             playground.ShowRoom(playground.traderRoom);
 
-            if (!Movement(player, playground.startMap, playground))
+            if (!Movement(player, playground.traderRoom, playground))
                 return;
+
+            if (player.playerX == 45 && player.playerY == 0)
+            {
+                ReturnToStartMap(player, playground);
+            }
 
             if (player.playerY == 14)
             {
                 if (player.playerX == 15)
                 {
-                    playground.BuyItem(player, 'A');
+                    playground.BuyItem(player, "⚔️");
                     player.playerY = 15;
                 }
                 else if (player.playerX == 35)
                 {
-                    playground.BuyItem(player, 'S');
-                    player.playerY = 36;
+                    playground.BuyItem(player, "🛡️");
+                    player.playerY = 15;
                 }
                 else if (player.playerX == 55)
                 {
-                    playground.BuyItem(player, 'L');
-                    player.playerY = 56;
+                    playground.BuyItem(player, "❤️");
+                    player.playerY = 15;
                 }
                 else if (player.playerX == 75)
                 {
-                    playground.BuyItem(player, 'T');
-                    player.playerY = 76;
+                    playground.BuyItem(player, "💎");
+                    player.playerY = 15;
                 }
             }
         }
@@ -415,8 +492,6 @@ class Program
 
     public static void Main()
     {
-        
-
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
         Player player = new Player();
@@ -500,13 +575,18 @@ class Program
 
                             if (player.playerX == 35 && player.playerY == 0)
                                 ReturnToRecoveryRoom(player, playground);
-
-                            if (player.playerX == 0 && player.playerY == 27)
-                                ReturnToRecoveryRoom(player, playground);
                         }
                     }
                 }
             }
         }
+
+        
+        if (player.healthPoints <= 0)
+        {
+            Mobs.GameOver(player);
+        }
+
+        
     }
 }
